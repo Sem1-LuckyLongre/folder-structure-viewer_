@@ -11,7 +11,10 @@ app.use(express.json()); // Middleware to parse JSON requests
 // Configure CORS
 app.use(
   cors({
-    origin: ["https://folder-structure-viewershadowx.vercel.app","http://127.0.0.1:5500"], // Ensure this matches your frontend origin exactly
+    origin: [
+      "https://folder-structure-viewershadowx.vercel.app",
+      "http://127.0.0.1:5500",
+    ], // Ensure this matches your frontend origin exactly
     methods: ["GET", "POST", "PUT"],
     allowedHeaders: ["Content-Type"],
     optionsSuccessStatus: 200,
@@ -65,6 +68,7 @@ const shouldIgnore = (file) => {
   const ignoredFiles = new Set([
     "node_modules",
     "public",
+    "bun.lockb",
     "dist",
     "build",
     ".git",
@@ -96,9 +100,9 @@ const shouldIgnore = (file) => {
  * API endpoint to retrieve folder structure.
  */
 
-app.get("/",(req,res)=>{
-  res.send("Hello Welcome to ShadowX")
-})
+app.get("/", (req, res) => {
+  res.send("Welcome to ShadowX");
+});
 app.post("/getFolderStructure", async (req, res) => {
   try {
     const { folder_url } = req.body;
@@ -136,13 +140,13 @@ app.post("/getFileData", async (req, res) => {
 
     const data = await fs.promises.readFile(file_url, { encoding: "utf8" });
     res.status(200).json({ data });
-  } catch (error) {       
+  } catch (error) {
     console.error("Server Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
-  } 
+  }
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server is running successfully `);
 });
