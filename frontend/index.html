@@ -13,7 +13,7 @@
     <div class="container">
         <header>
             <h1>Folder Structure Viewer</h1>
-            <p class="subtitle">Visualize your directory structure with ease</p>
+            <p class="subtitle">Visualize and search your directory structure with ease</p>
         </header>
 
         <div class="card">
@@ -29,9 +29,40 @@
         </div>
 
         <div class="card">
-            <h3 style="margin-bottom: 1rem;">Folder Structure</h3>
+            <div class="search-filter-container">
+                <div class="input-group search-group">
+                    <i class="input-icon fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search files and folders...">
+                    <button id="clearSearch" class="clear-search-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-toggle">
+                        <input type="checkbox" id="filterFiles" checked>
+                        <label for="filterFiles">Files</label>
+                    </div>
+                    <div class="filter-toggle">
+                        <input type="checkbox" id="filterFolders" checked>
+                        <label for="filterFolders">Folders</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="structure-header">
+                <h3>Folder Structure</h3>
+                <div class="structure-stats" id="structureStats">
+                    <span id="foldersCount">0 folders</span>
+                    <span id="filesCount">0 files</span>
+                </div>
+            </div>
+            
             <div class="loader" id="loader"></div>
             <div id="folderStructure" class="empty"></div>
+            <div id="noResults" class="no-results">
+                <i class="fas fa-search"></i>
+                <p>No matching items found</p>
+            </div>
         </div>
 
         <div class="file-data-container" id="file_data_div">
