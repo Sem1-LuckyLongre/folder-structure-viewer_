@@ -1,565 +1,546 @@
 :root {
-    --primary: #4361ee;
-    --primary-dark: #3a56d4;
-    --secondary: #3f37c9;
-    --background: #f8f9fa;
-    --card-bg: #ffffff;
-    --text: #2b2d42;
-    --text-light: #8d99ae;
-    --border: #e9ecef;
-    --success: #4cc9f0;
-    --error: #f72585;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--background);
-    color: var(--text);
-    line-height: 1.6;
-    padding: 0;
-    margin: 0;
-    min-height: 100vh;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1.5rem;
-  }
-  
-  header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    animation: fadeIn 0.5s ease-out;
-  }
-  
-  h1 {
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
-    margin-bottom: 0.5rem;
-    background: linear-gradient(45deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  
-  .subtitle {
-    color: var(--text-light);
-    font-size: clamp(0.9rem, 3vw, 1.1rem);
-  }
-  
-  .card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  }
-  
-  .input-group {
-    position: relative;
-    margin-bottom: 1.2rem;
-  }
-  
-  .input-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-light);
-    font-size: clamp(0.9rem, 3vw, 1rem);
-  }
-  
-  input {
-    width: 100%;
-    padding: 12px 12px 12px 45px;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: clamp(0.9rem, 3vw, 1rem);
-    transition: all 0.3s ease;
-  }
-  
-  input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-  }
-  
-  button {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: clamp(0.9rem, 3vw, 1rem);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  button:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-2px);
-  }
-  
-  button:active {
-    transform: translateY(0);
-  }
-  
-  button:disabled {
-    background-color: var(--text-light);
-    cursor: not-allowed;
-    transform: none;
-  }
-  
-  #folderStructure {
-    margin-top: 1rem;
-    min-height: 150px;
-    transition: all 0.3s ease;
-  }
-  
-  #folderStructure.empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-light);
-  }
-  
-  .folder-summary {
-    background-color: rgba(67, 97, 238, 0.1);
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    display: flex;
-    gap: 20px;
-    font-size: 0.9rem;
-    color: var(--text);
-    border-left: 3px solid var(--primary);
-  }
-  
-  .folder-summary i {
-    margin-right: 5px;
-    color: var(--primary);
-  }
-  
-  .folder-summary span {
-    display: flex;
-    align-items: center;
-  }
-  
-  .loader {
-    display: none;
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(67, 97, 238, 0.2);
-    border-radius: 50%;
-    border-top-color: var(--primary);
-    animation: spin 1s ease-in-out infinite;
-    margin: 1.5rem auto;
-  }
-  
-  .error-message {
-    color: var(--error);
-    background-color: rgba(247, 37, 133, 0.1);
-    padding: 0.8rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-    display: none;
-    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-  }
-  
-  /* Collapsible Folder Structure Styles */
-  .folder-structure-container {
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: inset 0 0 0 1px var(--border);
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  
-  .folder-item {
-    position: relative;
-    padding-left: 24px;
-    margin-bottom: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .folder-item:hover {
-    color: var(--primary);
-  }
-  
-  .folder-toggle {
-    position: absolute;
-    left: 0;
-    top: 2px;
-    width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-light);
-    transition: all 0.2s ease;
-    border-radius: 3px;
-  }
-  
-  .folder-toggle:hover {
-    color: var(--primary);
-    background: rgba(67, 97, 238, 0.1);
-  }
-  
-  .folder-name {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  
-  .folder-name i {
-    color: var(--primary);
-    font-size: 0.9em;
-  }
-  
-  .folder-contents {
-    margin-left: 16px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .folder-contents.collapsed {
-    height: 0;
+  --primary: #4361ee;
+  --primary-dark: #3a56d4;
+  --secondary: #3f37c9;
+  --background: #f8f9fa;
+  --card-bg: #ffffff;
+  --text: #2b2d42;
+  --text-light: #8d99ae;
+  --border: #e9ecef;
+  --success: #4cc9f0;
+  --error: #f72585;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  margin-bottom: 0.5rem;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  color: var(--text-light);
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.2rem;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  font-size: clamp(0.9rem, 3vw, 1rem);
+}
+
+input {
+  width: 100%;
+  padding: 12px 12px 12px 45px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  background-color: var(--text-light);
+  cursor: not-allowed;
+  transform: none;
+}
+
+#folderStructure {
+  margin-top: 1rem;
+  padding: 1.2rem;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  min-height: 150px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: "Consolas", monospace;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  transition: all 0.3s ease;
+}
+
+#folderStructure.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+}
+/* Add this to your CSS */
+.folder-summary {
+  background-color: rgba(67, 97, 238, 0.1);
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: var(--text);
+  border-left: 3px solid var(--primary);
+}
+
+.folder-summary i {
+  margin-right: 5px;
+  color: var(--primary);
+}
+
+.folder-summary span {
+  display: flex;
+  align-items: center;
+}
+
+.loader {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(67, 97, 238, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+  margin: 1.5rem auto;
+}
+
+.folder-structure-item {
+  padding-left: 18px;
+  position: relative;
+  margin-bottom: 4px;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+}
+
+.folder-structure-item:hover {
+  color: var(--primary);
+}
+
+.folder-icon:before {
+  content: "📁";
+  margin-right: 5px;
+}
+
+.file-icon:before {
+  content: "📄";
+  margin-right: 5px;
+  color: var(--text-light);
+}
+
+.error-message {
+  color: var(--error);
+  background-color: rgba(247, 37, 133, 0.1);
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  display: none;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+}
+
+/* File Data Container Styles */
+.file-data-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: min(700px, calc(100vw - 40px));
+  background: linear-gradient(145deg, #ffffff, #f8f9fa);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-height: 70vh;
+}
+
+.file-data-container.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+/* Update the existing file-data-header styles */
+.file-data-header {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  gap: 10px;
+}
+
+.file-data-title {
+  font-weight: 600;
+  font-size: clamp(0.85rem, 3vw, 0.95rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.file-data-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.file-data-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.file-data-content {
+  padding: 15px;
+  font-family: "Fira Code", "Consolas", "Courier New", monospace;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  max-height: calc(70vh - 100px);
+  background-color: #fcfcfc;
+  color: #2b2d42;
+  line-height: 1.5;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) #f1f1f1;
+}
+
+.file-data-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.file-data-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.file-data-content::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 3px;
+}
+
+.file-data-content:hover::-webkit-scrollbar-thumb {
+  background-color: var(--primary-dark);
+}
+
+.file-data-footer {
+  background: #f0f2f5;
+  padding: 8px 15px;
+  font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+  color: var(--text-light);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.file-data-status {
+  display: flex;
+  gap: 15px;
+}
+
+.file-data-line-col {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.file-data-icon {
+  color: var(--primary);
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+}
+
+.file-data-zoom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.file-data-zoom-btn {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.file-data-zoom-btn:hover {
+  color: var(--primary);
+  background: rgba(67, 97, 238, 0.1);
+}
+
+/* Syntax highlighting for common file types */
+.file-data-content[data-filetype="html"],
+.file-data-content[data-filetype="htm"] {
+  color: black;
+}
+
+.file-data-content[data-filetype="css"] {
+  color: black;
+}
+
+.file-data-content[data-filetype="js"] {
+  color: black;
+}
+
+/* Add these styles to your CSS */
+.file-data-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.file-data-copy {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.file-data-copy:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.file-data-copy:active {
+  transform: scale(0.95);
+}
+
+.file-data-copy.success {
+  background: rgba(76, 201, 240, 0.8);
+  color: white;
+}
+
+.file-data-copy.success::after {
+  content: "Copied!";
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--success);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  opacity: 0;
+  animation: fadeTooltip 0.3s ease-out forwards;
+}
+
+@keyframes fadeTooltip {
+  0% {
     opacity: 0;
-    margin-top: 0;
-    margin-bottom: 0;
+    transform: translateX(-50%) translateY(5px);
   }
-  
-  .file-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding-left: 24px;
-    margin-bottom: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .file-item:hover {
-    color: var(--primary);
-  }
-  
-  .file-item i {
-    color: var(--text-light);
-    font-size: 0.9em;
-  }
-  
-  /* File Data Container Styles */
-  .file-data-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: min(700px, calc(100vw - 40px));
-    background: linear-gradient(145deg, #ffffff, #f8f9fa);
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    max-height: 70vh;
-  }
-  
-  .file-data-container.visible {
-    transform: translateY(0);
+  100% {
     opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
-  
-  .file-data-header {
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    gap: 10px;
-  }
-  
-  .file-data-title {
-    font-weight: 600;
-    font-size: clamp(0.85rem, 3vw, 0.95rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-grow: 1;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-  
-  .file-data-actions {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .file-data-close {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .file-data-close:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-  }
-  
-  .file-data-content {
-    padding: 15px;
-    font-family: "Fira Code", "Consolas", "Courier New", monospace;
-    white-space: pre-wrap;
-    overflow-y: auto;
-    max-height: calc(70vh - 100px);
-    background-color: #fcfcfc;
-    color: #2b2d42;
-    line-height: 1.5;
-    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-    border-left: 1px solid rgba(0, 0, 0, 0.05);
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary) #f1f1f1;
-  }
-  
-  .file-data-content::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .file-data-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-  }
-  
-  .file-data-content::-webkit-scrollbar-thumb {
-    background-color: var(--primary);
-    border-radius: 3px;
-  }
-  
-  .file-data-content:hover::-webkit-scrollbar-thumb {
-    background-color: var(--primary-dark);
-  }
-  
-  .file-data-footer {
-    background: #f0f2f5;
-    padding: 8px 15px;
-    font-size: clamp(0.7rem, 2.5vw, 0.8rem);
-    color: var(--text-light);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .file-data-status {
-    display: flex;
-    gap: 15px;
-  }
-  
-  .file-data-line-col {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-  
-  .file-data-icon {
-    color: var(--primary);
-    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-  }
-  
-  .file-data-zoom {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  
-  .file-data-zoom-btn {
-    background: none;
-    border: none;
-    color: var(--text-light);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-    padding: 2px 5px;
-    border-radius: 3px;
-  }
-  
-  .file-data-zoom-btn:hover {
-    color: var(--primary);
-    background: rgba(67, 97, 238, 0.1);
-  }
-  
-  .file-data-copy {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  
-  .file-data-copy:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
-  }
-  
-  .file-data-copy:active {
-    transform: scale(0.95);
-  }
-  
-  .file-data-copy.success {
-    background: rgba(76, 201, 240, 0.8);
-    color: white;
-  }
-  
-  .file-data-copy.success::after {
-    content: "Copied!";
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--success);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    white-space: nowrap;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+/* Animation for content loading */
+@keyframes fadeInContent {
+  from {
     opacity: 0;
-    animation: fadeTooltip 0.3s ease-out forwards;
+    transform: translateY(5px);
   }
-  
-  /* Animation for content loading */
-  @keyframes fadeInContent {
-    from {
-      opacity: 0;
-      transform: translateY(5px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .file-data-content.loading {
-    animation: fadeInContent 0.3s ease-out;
+}
+
+.file-data-content.loading {
+  animation: fadeInContent 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  @keyframes fadeTooltip {
-    0% {
-      opacity: 0;
-      transform: translateX(-50%) translateY(5px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+}
+
+/* Responsive adjustments for very small devices */
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 480px) {
-    .container {
-      padding: 1rem;
-    }
-  
-    .card {
-      padding: 1rem;
-    }
-  
-    .folder-structure-container {
-      max-height: 50vh;
-    }
-  
-    .file-data-container {
-      width: calc(100vw - 30px);
-      right: 15px;
-      bottom: 15px;
-      max-height: 60vh;
-    }
-  
-    .file-data-content {
-      max-height: calc(60vh - 90px);
-      padding: 12px;
-    }
-  
-    .file-data-status {
-      gap: 10px;
-      flex-direction: column;
-      align-items: flex-start;
-    }
+
+  .card {
+    padding: 1rem;
   }
-  
-  @media (min-width: 481px) and (max-width: 768px) {
-    .container {
-      max-width: 90%;
-    }
-  
-    .file-data-container {
-      width: 80%;
-      right: 10%;
-    }
+
+  #folderStructure {
+    padding: 1rem;
+    max-height: 50vh;
   }
-  
-  @media (max-height: 500px) {
-    .file-data-container {
-      max-height: 80vh;
-    }
-  
-    .file-data-content {
-      max-height: calc(80vh - 100px);
-    }
+
+  .file-data-container {
+    width: calc(100vw - 30px);
+    right: 15px;
+    bottom: 15px;
+    max-height: 60vh;
   }
+
+  .file-data-content {
+    max-height: calc(60vh - 90px);
+    padding: 12px;
+  }
+
+  .file-data-status {
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .file-data-line-col {
+    gap: 5px;
+  }
+
+  .file-data-zoom {
+    gap: 5px;
+  }
+}
+
+/* Tablet and medium devices */
+@media (min-width: 481px) and (max-width: 768px) {
+  .container {
+    max-width: 90%;
+  }
+
+  .file-data-container {
+    width: 80%;
+    right: 10%;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) {
+  .file-data-container {
+    max-height: 80vh;
+  }
+
+  .file-data-content {
+    max-height: calc(80vh - 100px);
+  }
+}
