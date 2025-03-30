@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("updapated");
-    
   const viewBtn = document.getElementById("viewBtn");
   const folderPath = document.getElementById("folderPath");
   const folderStructure = document.getElementById("folderStructure");
   const loader = document.getElementById("loader");
   const errorMessage = document.getElementById("errorMessage");
 
-  const URI = "https://folder-structure-viewer-backend.onrender.com";
+  const URI = "http://localhost:3000";
   folderStructure.textContent = "Folder structure will be displayed here...";
 
   viewBtn.addEventListener("click", async function () {
@@ -36,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
-      //   console.log(data);
+      console.log(data);
 
       if (!response.ok) {
         showError(data.error || "Error fetching folder structure");
@@ -78,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
       loader.style.display = "none";
     }
   });
+  // hello 
 
   function displayFolderStructure(
     structure,
