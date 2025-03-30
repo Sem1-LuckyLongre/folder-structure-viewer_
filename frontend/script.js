@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
-      console.log(data);
+      //   console.log(data);
 
       if (!response.ok) {
         showError(data.error || "Error fetching folder structure");
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
       loader.style.display = "none";
     }
   });
-  // hello 
+  // hello
 
   function displayFolderStructure(
     structure,
@@ -135,8 +135,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function showFileData(path) {
-    console.log(path);
-
     try {
       const fileDataDiv = document.getElementById("file_data_div");
       const fileDataContent = document.getElementById("file_data_content");
