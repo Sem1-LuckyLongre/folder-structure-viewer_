@@ -28,8 +28,25 @@
             <div class="error-message" id="errorMessage"></div>
         </div>
 
+        <div class="card" id="searchCard" style="display: none;">
+            <div class="input-group">
+                <i class="input-icon fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search files and folders...">
+            </div>
+        </div>
+
         <div class="card">
-            <h3 style="margin-bottom: 1rem;">Folder Structure</h3>
+            <div class="card-header">
+                <h3>Folder Structure</h3>
+                <div class="card-actions">
+                    <button id="expandAllBtn" title="Expand All">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button id="collapseAllBtn" title="Collapse All">
+                        <i class="fas fa-compress"></i>
+                    </button>
+                </div>
+            </div>
             <div class="loader" id="loader"></div>
             <div id="folderStructure" class="empty"></div>
         </div>

@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const folderStructure = document.getElementById("folderStructure");
   const loader = document.getElementById("loader");
   const errorMessage = document.getElementById("errorMessage");
+  const searchInput = document.getElementById("searchInput");
+  const searchCard = document.getElementById("searchCard");
+  const expandAllBtn = document.getElementById("expandAllBtn");
+  const collapseAllBtn = document.getElementById("collapseAllBtn");
 
   const URI = "http://localhost:3000";
   folderStructure.textContent = "Folder structure will be displayed here...";
@@ -23,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     folderStructure.classList.add("empty");
     loader.style.display = "block";
     errorMessage.style.display = "none";
+    searchCard.style.display = "none";
 
     try {
       const response = await fetch(`${URI}/getFolderStructure`, {
@@ -34,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
-      //   console.log(data);
 
       if (!response.ok) {
         showError(data.error || "Error fetching folder structure");
@@ -45,20 +49,19 @@ document.addEventListener("DOMContentLoaded", function () {
       folderStructure.classList.remove("empty");
       folderStructure.innerHTML = "";
 
-      // Replace the summary creation part with:
       if (data.folderStructure) {
         // Create a summary div
         const summaryDiv = document.createElement("div");
         summaryDiv.className = "folder-summary";
 
         summaryDiv.innerHTML = `
-      <span><i class="fas fa-folder"></i> ${
-        data.allFolders.length || 0
-      } folders</span>
-      <span><i class="fas fa-file"></i> ${
-        data.allFiles.length || 0
-      } files</span>
-    `;
+            <span><i class="fas fa-folder"></i> ${
+              data.allFolders.length || 0
+            } folders</span>
+            <span><i class="fas fa-file"></i> ${
+              data.allFiles.length || 0
+            } files</span>
+          `;
 
         folderStructure.appendChild(summaryDiv);
         displayFolderStructure(data.folderStructure, folderStructure, path);
@@ -76,7 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
       loader.style.display = "none";
     }
   });
-  // hello
 
   function displayFolderStructure(
     structure,
@@ -85,42 +87,66 @@ document.addEventListener("DOMContentLoaded", function () {
     level = 0
   ) {
     for (const [folderName, folderData] of Object.entries(structure)) {
-      // For the root folder, use the basePath directly
       const folderPath = level === 0 ? basePath : `${basePath}\\${folderName}`;
 
-      // Create folder item
-      const folderItem = document.createElement("div");
-      folderItem.className = "folder-structure-item folder-icon";
-      folderItem.style.paddingLeft = `${20 + level * 15}px`;
-      folderItem.textContent = folderName;
-      //   folderItem.onclick = () => alert(`Folder: ${folderPath}`);
-      container.appendChild(folderItem);
+      // Create folder container
+      const folderContainer = document.createElement("div");
+      folderContainer.className = "folder-structure-item";
+      folderContainer.style.paddingLeft = `${level * 15}px`;
 
-      // Display files in this folder if they exist
+      // Create folder header with toggle
+      const folderHeader = document.createElement("div");
+      folderHeader.className = "folder-header";
+      folderHeader.innerHTML = `
+          <span class="folder-toggle">▾</span>
+          <i class="fas fa-folder folder-icon"></i>
+          <span class="folder-name">${folderName}</span>
+        `;
+
+      // Create children container
+      const childrenContainer = document.createElement("div");
+      childrenContainer.className = "folder-children";
+
+      // Add files to children container
       if (folderData.files && folderData.files.length > 0) {
         folderData.files.forEach((file) => {
           const filePath = `${folderPath}\\${file}`;
           const fileItem = document.createElement("div");
           fileItem.className = "folder-structure-item file-icon cursor-pointer";
-          fileItem.style.paddingLeft = `${20 + (level + 1) * 15}px`;
-          fileItem.textContent = file;
+          fileItem.style.paddingLeft = "20px";
+          fileItem.innerHTML = `<i class="fas fa-file file-icon"></i> ${file}`;
           fileItem.addEventListener("click", () => showFileData(filePath));
-          container.appendChild(fileItem);
+          childrenContainer.appendChild(fileItem);
         });
       }
 
-      // Recursively display subfolders
+      // Add click handler for folder toggle
+      const toggle = folderHeader.querySelector(".folder-toggle");
+      folderHeader.addEventListener("click", () => {
+        toggle.classList.toggle("collapsed");
+        childrenContainer.classList.toggle("collapsed");
+      });
+
+      // Add subfolders recursively
       for (const [subfolderName, subfolderData] of Object.entries(folderData)) {
         if (subfolderName !== "files") {
           displayFolderStructure(
             { [subfolderName]: subfolderData },
-            container,
+            childrenContainer,
             folderPath,
             level + 1
           );
         }
       }
+
+      // Assemble the folder structure
+      folderContainer.appendChild(folderHeader);
+      folderContainer.appendChild(childrenContainer);
+      container.appendChild(folderContainer);
     }
+
+    // Show search bar after structure is loaded
+    searchCard.style.display = "block";
   }
 
   function displayFileList(files, container) {
@@ -128,11 +154,111 @@ document.addEventListener("DOMContentLoaded", function () {
       const fileName = filePath.split(/[\\/]/).pop();
       const item = document.createElement("div");
       item.className = "folder-structure-item file-icon cursor-pointer";
-      item.textContent = fileName;
-      // item.onclick = () => alert(`File Path: ${filePath}`);
+      item.innerHTML = `<i class="fas fa-file file-icon"></i> ${fileName}`;
+      item.addEventListener("click", () => showFileData(filePath));
       container.appendChild(item);
     });
+
+    // Show search bar after files are loaded
+    searchCard.style.display = "block";
   }
+
+  // Search functionality
+  searchInput.addEventListener("input", function () {
+    const searchTerm = this.value.trim().toLowerCase();
+    if (!searchTerm) {
+      // Reset all highlights and show everything
+      document.querySelectorAll(".highlight").forEach((el) => {
+        const parent = el.parentNode;
+        while (el.firstChild) {
+          parent.insertBefore(el.firstChild, el);
+        }
+        parent.removeChild(el);
+        parent.normalize();
+      });
+      document.querySelectorAll(".folder-structure-item").forEach((el) => {
+        el.style.display = "flex";
+      });
+      document.querySelectorAll(".folder-children").forEach((el) => {
+        el.style.display = "block";
+      });
+      const emptyState = document.querySelector(".search-empty");
+      if (emptyState) emptyState.remove();
+      return;
+    }
+
+    let hasResults = false;
+
+    // Hide all items first
+    document.querySelectorAll(".folder-structure-item").forEach((el) => {
+      el.style.display = "none";
+    });
+
+    // Show matching items and highlight text
+    document.querySelectorAll(".folder-structure-item").forEach((el) => {
+      const text = el.textContent.toLowerCase();
+      if (text.includes(searchTerm)) {
+        el.style.display = "flex";
+        hasResults = true;
+
+        // Highlight the matching text
+        const regex = new RegExp(searchTerm, "gi");
+        const newHTML = el.innerHTML.replace(
+          regex,
+          (match) => `<span class="highlight">${match}</span>`
+        );
+        el.innerHTML = newHTML;
+
+        // Expand parent folders
+        let parent = el.closest(".folder-children");
+        while (parent) {
+          parent.style.display = "block";
+          parent.classList.remove("collapsed");
+          const header = parent.previousElementSibling;
+          if (header && header.classList.contains("folder-header")) {
+            header.style.display = "flex";
+            header
+              .querySelector(".folder-toggle")
+              .classList.remove("collapsed");
+          }
+          parent = parent.parentElement.closest(".folder-children");
+        }
+      }
+    });
+
+    // Show empty state if no results
+    const emptyState = document.querySelector(".search-empty");
+    if (!hasResults) {
+      if (!emptyState) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "search-empty";
+        emptyDiv.textContent = "No files or folders match your search";
+        folderStructure.appendChild(emptyDiv);
+      }
+    } else if (emptyState) {
+      emptyState.remove();
+    }
+  });
+
+  // Expand all folders
+  expandAllBtn.addEventListener("click", function () {
+    document.querySelectorAll(".folder-children").forEach((el) => {
+      el.classList.remove("collapsed");
+    });
+    document.querySelectorAll(".folder-toggle").forEach((el) => {
+      el.classList.remove("collapsed");
+    });
+  });
+
+  // Collapse all folders
+  collapseAllBtn.addEventListener("click", function () {
+    document.querySelectorAll(".folder-children").forEach((el) => {
+      el.classList.add("collapsed");
+    });
+    document.querySelectorAll(".folder-toggle").forEach((el) => {
+      el.classList.add("collapsed");
+    });
+  });
 
   async function showFileData(path) {
     try {
@@ -165,18 +291,17 @@ document.addEventListener("DOMContentLoaded", function () {
       const fileType = fileName.split(".").pop().toLowerCase();
 
       document.getElementById("file_data_title").innerHTML = `
-                        <i class="fas fa-file${
-                          fileType === "js"
-                            ? "-code"
-                            : fileType === "css"
-                            ? "-import"
-                            : fileType === "html"
-                            ? "-export"
-                            : "-alt"
-                        }" 
-                           style="margin-right: 8px;"></i>
-                        <span>${fileName}</span>
-                    `;
+          <i class="fas fa-file${
+            fileType === "js"
+              ? "-code"
+              : fileType === "css"
+              ? "-import"
+              : fileType === "html"
+              ? "-export"
+              : "-alt"
+          }" style="margin-right: 8px;"></i>
+          <span>${fileName}</span>
+        `;
 
       // Set the content with file type attribute for syntax coloring
       fileDataContent.textContent = data.data;
@@ -200,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Add this near the other event listeners (where the close button and zoom are handled)
+  // Copy to clipboard functionality
   document
     .getElementById("file_data_copy")
     .addEventListener("click", function () {
@@ -263,5 +388,6 @@ document.addEventListener("DOMContentLoaded", function () {
     folderStructure.innerHTML = "";
     folderStructure.classList.add("empty");
     folderStructure.textContent = "Folder structure will be displayed here...";
+    searchCard.style.display = "none";
   }
 });
