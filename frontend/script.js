@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loader");
   const errorMessage = document.getElementById("errorMessage");
 
-  const URI = "";
+  const URI = "https://folder-structure-viewer-backend.onrender.com";
   folderStructure.textContent = "Folder structure will be displayed here...";
 
   viewBtn.addEventListener("click", async function () {
