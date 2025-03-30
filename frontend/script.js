@@ -184,14 +184,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const showFiles = filterFiles.checked;
     const showFolders = filterFolders.checked;
 
-    // Show/hide clear search button
     if (searchTerm.length > 0) {
       clearSearchBtn.classList.add("visible");
     } else {
       clearSearchBtn.classList.remove("visible");
     }
 
-    // Get all structure items
     const items = folderStructure.querySelectorAll(".folder-structure-item");
     let visibleCount = 0;
 
@@ -200,7 +198,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const isFile = item.dataset.type === "file";
       const isFolder = item.dataset.type === "folder";
 
-      // Check if item matches search and type filters
       const matchesSearch = searchTerm === "" || itemName.includes(searchTerm);
       const matchesType = (isFile && showFiles) || (isFolder && showFolders);
       const shouldShow = matchesSearch && matchesType;
@@ -209,23 +206,23 @@ document.addEventListener("DOMContentLoaded", function () {
         item.style.display = "";
         visibleCount++;
 
-        // Highlight matching text
         if (searchTerm) {
           const regex = new RegExp(searchTerm, "gi");
           const highlightedName = item.dataset.name.replace(
             regex,
             (match) => `<span class="highlight">${match}</span>`
           );
-          item.innerHTML = (isFolder ? "📁 " : "📄 ") + highlightedName;
+          // Remove the icon from HTML since we're using CSS :before
+          item.innerHTML = highlightedName;
         } else {
-          item.textContent = (isFolder ? "📁 " : "📄 ") + item.dataset.name;
+          // Just show the name, icon will be added by CSS
+          item.textContent = item.dataset.name;
         }
       } else {
         item.style.display = "none";
       }
     });
 
-    // Show no results message if no items match
     if (visibleCount === 0 && (searchTerm || !showFiles || !showFolders)) {
       noResults.style.display = "flex";
     } else {
