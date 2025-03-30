@@ -11,7 +11,7 @@ app.use(express.json()); // Middleware to parse JSON requests
 // Configure CORS
 app.use(
   cors({
-    origin: "https://folder-structure-viewershadowx.vercel.app", // Ensure this matches your frontend origin exactly
+    origin: ["https://folder-structure-viewershadowx.vercel.app","http://127.0.0.1:5500"], // Ensure this matches your frontend origin exactly
     methods: ["GET", "POST", "PUT"],
     allowedHeaders: ["Content-Type"],
     optionsSuccessStatus: 200,
