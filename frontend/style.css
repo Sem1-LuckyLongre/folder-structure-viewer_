@@ -369,15 +369,15 @@ button:disabled {
 /* Syntax highlighting for common file types */
 .file-data-content[data-filetype="html"],
 .file-data-content[data-filetype="htm"] {
-  color: #e34c26;
+  color: black;
 }
 
 .file-data-content[data-filetype="css"] {
-  color: #2965f1;
+  color: black;
 }
 
 .file-data-content[data-filetype="js"] {
-  color: #f0db4f;
+  color: black;
 }
 
 /* Add these styles to your CSS */
