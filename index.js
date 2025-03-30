@@ -95,6 +95,10 @@ const shouldIgnore = (file) => {
 /**
  * API endpoint to retrieve folder structure.
  */
+
+app.get("/",(req,res)=>{
+  res.send("Hello Welcome to ShadowX")
+})
 app.post("/getFolderStructure", async (req, res) => {
   try {
     const { folder_url } = req.body;

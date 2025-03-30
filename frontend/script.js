@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loader");
   const errorMessage = document.getElementById("errorMessage");
 
+  const URI = "";
   folderStructure.textContent = "Folder structure will be displayed here...";
 
   viewBtn.addEventListener("click", async function () {
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     errorMessage.style.display = "none";
 
     try {
-      const response = await fetch("http://localhost:3000/getFolderStructure", {
+      const response = await fetch(`${URI}/getFolderStructure`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -143,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
       fileDataDiv.style.display = "flex";
       setTimeout(() => fileDataDiv.classList.add("visible"), 10);
 
-      const res = await fetch("http://localhost:3000/getFileData", {
+      const res = await fetch(`${URI}/getFileData`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
