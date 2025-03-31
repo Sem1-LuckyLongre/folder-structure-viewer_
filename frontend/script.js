@@ -234,7 +234,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const itemName = item.dataset.name.toLowerCase();
       const isFile = item.dataset.type === "file";
       const isFolder = item.dataset.type === "folder";
-      const matchesSearch = searchTerm === "" || itemName.includes(searchTerm);
+      
+      // Only search in folders
+      const matchesSearch = isFolder && (searchTerm === "" || itemName.includes(searchTerm));
       const matchesType = (isFile && showFiles) || (isFolder && showFolders);
       const shouldShow = matchesSearch && matchesType;
 
@@ -252,6 +254,16 @@ document.addEventListener("DOMContentLoaded", function () {
               toggleBtn.classList.add('expanded');
               toggleBtn.classList.remove('collapsed');
             }
+            
+            // Show all children of matching folder
+            const childrenContainer = folderContainer.querySelector('.children-container');
+            if (childrenContainer) {
+              childrenContainer.style.display = '';
+              const childItems = childrenContainer.querySelectorAll('.folder-structure-item');
+              childItems.forEach(child => {
+                child.style.display = '';
+              });
+            }
           }
         }
 
@@ -264,13 +276,10 @@ document.addEventListener("DOMContentLoaded", function () {
           
           // Preserve the folder icon and toggle button for folders
           if (isFolder) {
-            const toggleBtn = item.querySelector('.toggle-btn');
             const folderIcon = item.querySelector('.folder-name');
             if (folderIcon) {
               folderIcon.innerHTML = highlightedName;
             }
-          } else {
-            item.innerHTML = highlightedName;
           }
         } else {
           // Restore original content for folders
@@ -279,9 +288,26 @@ document.addEventListener("DOMContentLoaded", function () {
             if (folderIcon) {
               folderIcon.textContent = item.dataset.name;
             }
-          } else {
-            item.textContent = item.dataset.name;
           }
+        }
+      } else if (isFile) {
+        // For files, check if their parent folder matches the search
+        const parentFolder = item.closest('.folder-container');
+        if (parentFolder) {
+          const parentFolderItem = parentFolder.querySelector('.folder-structure-item');
+          if (parentFolderItem && parentFolderItem.dataset.type === 'folder') {
+            const parentName = parentFolderItem.dataset.name.toLowerCase();
+            if (searchTerm === "" || parentName.includes(searchTerm)) {
+              item.style.display = "";
+              visibleCount++;
+            } else {
+              item.style.display = "none";
+            }
+          } else {
+            item.style.display = "none";
+          }
+        } else {
+          item.style.display = "none";
         }
       } else {
         item.style.display = "none";
