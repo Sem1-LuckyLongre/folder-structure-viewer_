@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const foldersCount = document.getElementById("foldersCount");
   const filesCount = document.getElementById("filesCount");
 
-  const URI = "http://localhost:3000";
+  const URI = "https://folder-structure-viewer-backend.onrender.com";
   let currentStructure = null;
   let currentBasePath = "";
 
