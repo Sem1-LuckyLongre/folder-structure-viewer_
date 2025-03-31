@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Get all required elements
   const viewBtn = document.getElementById("viewBtn");
   const folderPath = document.getElementById("folderPath");
   const folderStructure = document.getElementById("folderStructure");
@@ -12,6 +13,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const foldersCount = document.getElementById("foldersCount");
   const filesCount = document.getElementById("filesCount");
 
+  // Check if required elements exist
+  if (!viewBtn || !folderPath || !folderStructure) {
+    console.error("Required elements not found");
+    return;
+  }
+
   const URI = "https://folder-structure-viewer-backend.onrender.com";
   let currentStructure = null;
   let currentBasePath = "";
@@ -19,12 +26,24 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize the app
   folderStructure.textContent = "Folder structure will be displayed here...";
 
-  // Event listeners
+  // Add event listeners only if elements exist
   viewBtn.addEventListener("click", fetchFolderStructure);
-  searchInput.addEventListener("input", filterStructure);
-  clearSearchBtn.addEventListener("click", clearSearch);
-  filterFiles.addEventListener("change", filterStructure);
-  filterFolders.addEventListener("change", filterStructure);
+  
+  if (searchInput) {
+    searchInput.addEventListener("input", filterStructure);
+  }
+  
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener("click", clearSearch);
+  }
+  
+  if (filterFiles) {
+    filterFiles.addEventListener("change", filterStructure);
+  }
+  
+  if (filterFolders) {
+    filterFolders.addEventListener("change", filterStructure);
+  }
 
   // Fetch folder structure from server
   async function fetchFolderStructure() {
@@ -217,14 +236,16 @@ document.addEventListener("DOMContentLoaded", function () {
   function filterStructure() {
     if (!currentStructure) return;
 
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const showFiles = filterFiles.checked;
-    const showFolders = filterFolders.checked;
+    const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const showFiles = filterFiles ? filterFiles.checked : true;
+    const showFolders = filterFolders ? filterFolders.checked : true;
 
-    if (searchTerm.length > 0) {
-      clearSearchBtn.classList.add("visible");
-    } else {
-      clearSearchBtn.classList.remove("visible");
+    if (clearSearchBtn) {
+      if (searchTerm.length > 0) {
+        clearSearchBtn.classList.add("visible");
+      } else {
+        clearSearchBtn.classList.remove("visible");
+      }
     }
 
     const items = folderStructure.querySelectorAll(".folder-structure-item");
@@ -301,19 +322,29 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    if (visibleCount === 0 && (searchTerm || !showFiles || !showFolders)) {
-      noResults.style.display = "flex";
-    } else {
-      noResults.style.display = "none";
+    if (noResults) {
+      if (visibleCount === 0 && (searchTerm || !showFiles || !showFolders)) {
+        noResults.style.display = "flex";
+      } else {
+        noResults.style.display = "none";
+      }
     }
   }
 
   // Clear search input and reset filters
   function clearSearch() {
-    searchInput.value = "";
-    clearSearchBtn.classList.remove("visible");
-    filterFiles.checked = true;
-    filterFolders.checked = true;
+    if (searchInput) {
+      searchInput.value = "";
+    }
+    if (clearSearchBtn) {
+      clearSearchBtn.classList.remove("visible");
+    }
+    if (filterFiles) {
+      filterFiles.checked = true;
+    }
+    if (filterFolders) {
+      filterFolders.checked = true;
+    }
     filterStructure();
   }
 
