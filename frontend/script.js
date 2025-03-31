@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Display files in this folder
       if (folderData.files && folderData.files.length > 0) {
         folderData.files.forEach((file) => {
-          const filePath = `${folderPath}\\${file}`;
+          const filePath = `${folderPath}/${file}`;
           const fileItem = document.createElement("div");
           fileItem.className = "folder-structure-item file-icon cursor-pointer";
           fileItem.style.paddingLeft = `${20 + (level + 1) * 15}px`;
