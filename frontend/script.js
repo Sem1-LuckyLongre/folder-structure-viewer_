@@ -126,11 +126,44 @@ document.addEventListener("DOMContentLoaded", function () {
       const folderItem = document.createElement("div");
       folderItem.className = "folder-structure-item folder-icon";
       folderItem.style.paddingLeft = `${20 + level * 15}px`;
-      folderItem.textContent = folderName;
+      
+      // Create folder container
+      const folderContainer = document.createElement("div");
+      folderContainer.className = "folder-container expanded";
+      
+      // Create toggle button
+      const toggleBtn = document.createElement("span");
+      toggleBtn.className = "toggle-btn expanded";
+      toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+      
+      // Create folder name span
+      const folderNameSpan = document.createElement("span");
+      folderNameSpan.className = "folder-name";
+      folderNameSpan.textContent = folderName;
+      
+      // Add click handler for toggle
+      folderItem.addEventListener("click", (e) => {
+        if (e.target === toggleBtn || e.target.parentElement === toggleBtn) {
+          const isExpanded = folderContainer.classList.contains("expanded");
+          folderContainer.classList.toggle("expanded");
+          toggleBtn.classList.toggle("expanded");
+          toggleBtn.classList.toggle("collapsed");
+        }
+      });
+      
+      // Assemble folder item
+      folderItem.appendChild(toggleBtn);
+      folderItem.appendChild(folderNameSpan);
+      folderContainer.appendChild(folderItem);
+      
+      // Create children container
+      const childrenContainer = document.createElement("div");
+      childrenContainer.className = "children-container";
+      
       folderItem.dataset.type = "folder";
       folderItem.dataset.path = folderPath;
       folderItem.dataset.name = folderName;
-      container.appendChild(folderItem);
+      container.appendChild(folderContainer);
 
       // Display files in this folder
       if (folderData.files && folderData.files.length > 0) {
@@ -144,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
           fileItem.dataset.path = filePath;
           fileItem.dataset.name = file;
           fileItem.addEventListener("click", () => showFileData(filePath));
-          container.appendChild(fileItem);
+          childrenContainer.appendChild(fileItem);
         });
       }
 
@@ -153,12 +186,15 @@ document.addEventListener("DOMContentLoaded", function () {
         if (subfolderName !== "files") {
           displayFolderStructure(
             { [subfolderName]: subfolderData },
-            container,
+            childrenContainer,
             folderPath,
             level + 1
           );
         }
       }
+      
+      // Add children container to folder container
+      folderContainer.appendChild(childrenContainer);
     }
   }
 

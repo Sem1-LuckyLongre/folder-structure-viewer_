@@ -624,3 +624,52 @@
       max-height: calc(80vh - 100px);
     }
   }
+  
+  .folder-container {
+    position: relative;
+  }
+  
+  .folder-container .toggle-btn {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .folder-container .toggle-btn.expanded {
+    transform: rotate(0deg);
+  }
+  
+  .folder-container .toggle-btn.collapsed {
+    transform: rotate(-90deg);
+  }
+  
+  .folder-container .folder-name {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
+  .folder-container .children-container {
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+  }
+  
+  .folder-container.expanded .children-container {
+    max-height: 2000px;
+  }
+  
+  .folder-container:not(.expanded) .children-container {
+    max-height: 0;
+  }
+  
+  .folder-structure-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    cursor: pointer;
+  }
+  
+  .folder-structure-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
