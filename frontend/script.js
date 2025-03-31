@@ -241,6 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Show file content in the preview panel
   async function showFileData(path) {
+    console.log(path);
     try {
       const fileDataDiv = document.getElementById("file_data_div");
       const fileDataContent = document.getElementById("file_data_content");
