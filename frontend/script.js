@@ -243,11 +243,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Show file content in the preview panel
   async function showFileData(path) {
     console.log(path);
-    let filePath = path;
-    if(path.includes("/")){
-      filePath = path.split("/")[1];
-    }
-    console.log(filePath,path);
+    // let filePath = path;
+    // if(path.includes("/")){
+    //   filePath = path.split("/")[1];
+    // }
+    // console.log(filePath,path);
     
     try {
       const fileDataDiv = document.getElementById("file_data_div");
