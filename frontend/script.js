@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
     level = 0
   ) {
     for (const [folderName, folderData] of Object.entries(structure)) {
-      const folderPath = level === 0 ? basePath : `${basePath}\\${folderName}`;
+      const folderPath = level === 0 ? basePath : `${basePath}/${folderName}`;
       const folderItem = document.createElement("div");
       folderItem.className = "folder-structure-item folder-icon";
       folderItem.style.paddingLeft = `${20 + level * 15}px`;
