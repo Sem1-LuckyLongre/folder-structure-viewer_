@@ -234,7 +234,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const itemName = item.dataset.name.toLowerCase();
       const isFile = item.dataset.type === "file";
       const isFolder = item.dataset.type === "folder";
-
       const matchesSearch = searchTerm === "" || itemName.includes(searchTerm);
       const matchesType = (isFile && showFiles) || (isFolder && showFolders);
       const shouldShow = matchesSearch && matchesType;
@@ -243,17 +242,46 @@ document.addEventListener("DOMContentLoaded", function () {
         item.style.display = "";
         visibleCount++;
 
+        // If it's a folder and matches search, show its children
+        if (isFolder && matchesSearch) {
+          const folderContainer = item.closest('.folder-container');
+          if (folderContainer) {
+            folderContainer.classList.add('expanded');
+            const toggleBtn = folderContainer.querySelector('.toggle-btn');
+            if (toggleBtn) {
+              toggleBtn.classList.add('expanded');
+              toggleBtn.classList.remove('collapsed');
+            }
+          }
+        }
+
         if (searchTerm) {
           const regex = new RegExp(searchTerm, "gi");
           const highlightedName = item.dataset.name.replace(
             regex,
             (match) => `<span class="highlight">${match}</span>`
           );
-          // Remove the icon from HTML since we're using CSS :before
-          item.innerHTML = highlightedName;
+          
+          // Preserve the folder icon and toggle button for folders
+          if (isFolder) {
+            const toggleBtn = item.querySelector('.toggle-btn');
+            const folderIcon = item.querySelector('.folder-name');
+            if (folderIcon) {
+              folderIcon.innerHTML = highlightedName;
+            }
+          } else {
+            item.innerHTML = highlightedName;
+          }
         } else {
-          // Just show the name, icon will be added by CSS
-          item.textContent = item.dataset.name;
+          // Restore original content for folders
+          if (isFolder) {
+            const folderIcon = item.querySelector('.folder-name');
+            if (folderIcon) {
+              folderIcon.textContent = item.dataset.name;
+            }
+          } else {
+            item.textContent = item.dataset.name;
+          }
         }
       } else {
         item.style.display = "none";
