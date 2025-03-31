@@ -54,7 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
-
+      console.log(data);
+      
       if (!response.ok) {
         showError(data.error || "Error fetching folder structure");
         return;
