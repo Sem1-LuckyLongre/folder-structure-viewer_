@@ -230,6 +230,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const items = folderStructure.querySelectorAll(".folder-structure-item");
     let visibleCount = 0;
 
+    // First pass: Mark all items as hidden
+    items.forEach(item => {
+      item.style.display = "none";
+    });
+
+    // Second pass: Show matching folders and their children
     items.forEach((item) => {
       const itemName = item.dataset.name.toLowerCase();
       const isFile = item.dataset.type === "file";
@@ -241,6 +247,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const shouldShow = matchesSearch && matchesType;
 
       if (shouldShow) {
+        // Show the matching folder
         item.style.display = "";
         visibleCount++;
 
@@ -262,6 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
               const childItems = childrenContainer.querySelectorAll('.folder-structure-item');
               childItems.forEach(child => {
                 child.style.display = '';
+                visibleCount++;
               });
             }
           }
@@ -290,27 +298,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           }
         }
-      } else if (isFile) {
-        // For files, check if their parent folder matches the search
-        const parentFolder = item.closest('.folder-container');
-        if (parentFolder) {
-          const parentFolderItem = parentFolder.querySelector('.folder-structure-item');
-          if (parentFolderItem && parentFolderItem.dataset.type === 'folder') {
-            const parentName = parentFolderItem.dataset.name.toLowerCase();
-            if (searchTerm === "" || parentName.includes(searchTerm)) {
-              item.style.display = "";
-              visibleCount++;
-            } else {
-              item.style.display = "none";
-            }
-          } else {
-            item.style.display = "none";
-          }
-        } else {
-          item.style.display = "none";
-        }
-      } else {
-        item.style.display = "none";
       }
     });
 
